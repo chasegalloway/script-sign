@@ -1,8 +1,8 @@
 {
     "name": "script-sign",
     "displayName": "Script Sign",
-    "description": "A VS Code extension that adds creation and modification details to files.",
-    "version": "1.0.1",
+    "description": "A VS Code extension that automatically adds creation and modification details to files.",
+    "version": "1.0.2",
     "publisher": "ChaseGalloway",
     "repository": {
         "type": "git",
@@ -25,6 +25,7 @@
             }
         ]
     },
+    "icon": "images/cover-image.png",
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
