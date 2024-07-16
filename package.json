@@ -6,7 +6,8 @@
     "publisher": "ChaseGalloway",
     "repository": {
         "type": "git",
-        "url": "https://github.com/chasegalloway/script-sign"},
+        "url": "https://github.com/chasegalloway/script-sign"
+    },
     "engines": {
         "vscode": "^1.60.0"
     },
@@ -18,6 +19,14 @@
     ],
     "main": "./out/extension.js",
     "contributes": {
+        "views": {
+            "explorer": [
+                {
+                    "id": "scriptSignSidebar",
+                    "name": "Script Sign Settings"
+                }
+            ]
+        },
         "commands": [
             {
                 "command": "script-sign.addTimestamps",
