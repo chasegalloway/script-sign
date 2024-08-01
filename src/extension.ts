@@ -1,3 +1,5 @@
+// Created by chase on 7/14/2024, 12:29:45 AM
+// Last modified by chase on 7/31/2024, 11:19:15 PM
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -48,35 +50,41 @@ export function activate(context: vscode.ExtensionContext) {
             return;
         }
 
-        const commentStart = commentStyle.start;
-        const commentEnd = commentStyle.end ? commentStyle.end : '';
-
-        fs.readFile(filePath, 'utf8', (err, data) => {
+        fs.stat(filePath, (err, stats) => {
             if (err) {
-                vscode.window.showErrorMessage(`Error reading file: ${err.message}`);
+                vscode.window.showErrorMessage(`Error getting file stats: ${err.message}`);
                 return;
             }
 
-            let lines = data.split('\n');
-            let createdLineIndex = lines.findIndex(line => line.startsWith(`${commentStart}Created by `));
-            let modifiedLineIndex = lines.findIndex(line => line.startsWith(`${commentStart}Last modified by `));
+            const creationTime = stats.birthtime.toLocaleString();
 
-            if (createdLineIndex === -1) {
-                lines.unshift(`${commentStart}Created by ${currentUser} on ${nowString}${commentEnd}`);
-                createdLineIndex = 0;
-            }
-
-            if (modifiedLineIndex !== -1) {
-                lines.splice(modifiedLineIndex, 1);
-            }
-
-            lines.splice(createdLineIndex + 1, 0, `${commentStart}Last modified by ${currentUser} on ${nowString}${commentEnd}`);
-
-            const newContent = lines.join('\n');
-            fs.writeFile(filePath, newContent, (err) => {
+            fs.readFile(filePath, 'utf8', (err, data) => {
                 if (err) {
-                    vscode.window.showErrorMessage(`Error writing file: ${err.message}`);
+                    vscode.window.showErrorMessage(`Error reading file: ${err.message}`);
+                    return;
                 }
+
+                let lines = data.split('\n');
+                let createdLineIndex = lines.findIndex(line => line.startsWith(`${commentStyle.start}Created by `));
+                let modifiedLineIndex = lines.findIndex(line => line.startsWith(`${commentStyle.start}Last modified by `));
+
+                if (createdLineIndex === -1) {
+                    lines.unshift(`${commentStyle.start}Created by ${currentUser} on ${creationTime}${commentStyle.end || ''}`);
+                    createdLineIndex = 0;
+                }
+
+                if (modifiedLineIndex !== -1) {
+                    lines.splice(modifiedLineIndex, 1);
+                }
+
+                lines.splice(createdLineIndex + 1, 0, `${commentStyle.start}Last modified by ${currentUser} on ${nowString}${commentStyle.end || ''}`);
+
+                const newContent = lines.join('\n');
+                fs.writeFile(filePath, newContent, (err) => {
+                    if (err) {
+                        vscode.window.showErrorMessage(`Error writing file: ${err.message}`);
+                    }
+                });
             });
         });
     });
@@ -122,10 +130,10 @@ function getWebviewContent(context: vscode.ExtensionContext): string {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Extension Settings</title>
+        <title>Script Sign</title>
     </head>
     <body>
-        <h1>My Extension Settings</h1>
+        <h1>Script Sign</h1>
         <form id="settingsForm">
             <label for="signingName">Signing Name:</label>
             <input type="text" id="signingName" name="signingName" value="${signingName}"><br><br>

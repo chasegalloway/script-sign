@@ -2,7 +2,7 @@
     "name": "script-sign",
     "displayName": "Script Sign",
     "description": "A VS Code extension that automatically adds creation and modification details to files.",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "publisher": "ChaseGalloway",
     "repository": {
         "type": "git",
@@ -49,6 +49,7 @@
         "vscode-test": "^1.4.0"
     },
     "dependencies": {
-        "@vscode/vsce": "^2.30.0"
+        "@vscode/vsce": "^2.30.0",
+        "script-sign": "file:"
     }
 }
